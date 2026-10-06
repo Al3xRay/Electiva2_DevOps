@@ -1,0 +1,25 @@
+name: Alerta de Despliegue
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notificar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Ejecutar Hola Mundo
+        run: node hola-mundo.js
+
+      - name: Enviar notificación a ntfy.sh
+        run: |
+          curl -X POST "https://ntfy.sh/devops-itla" \
+            -H "Title: 🚀 Nuevo push en Electiva2_DevOps" \
+            -H "Priority: high" \
+            -H "Tags: rocket,github" \
+            -d "Se realizó un push en la rama main del repositorio Electiva2_DevOps por ${{ github.actor }} - Commit: ${{ github.event.head_commit.message }}"
